@@ -1,13 +1,16 @@
+/*OUR WORLD HEALTH COVID 19 DATA EXPOLORATION PROJECT
+
+Skills used: Joins, CTE's, Window's Functions, Aggregate Functions, Creating Views, Converting Data Types
+*/
+
 Select *
 From SQLPORTFOLIO..CovidDeaths
 Where continent is not null
 Order by 3,4
 
---Select *
---From SQLPORTFOLIO..CovidVaccinations
---order by 3,4
 
---Select the data we are going to be using 
+
+--Select the data we are going to begin with
 Select location, date, total_cases, new_cases, total_deaths, population
 From SQLPORTFOLIO..CovidDeaths
 Where continent is not null
@@ -62,6 +65,7 @@ order by 1,2
 
 
 --Looking at Total population vs new vaccinations per day
+--Shows percentage of population that has received at least one Covid Vaccine
 Select dea.continent, dea.location,dea.date, population, vac.new_vaccinations
 , SUM(cast(vac.new_vaccinations as int)) OVER ( partition by dea.location order by dea.location, dea.date) as
 rolling_vaccination_count
@@ -72,6 +76,7 @@ and dea.date =vac.date
 where dea.continent is not null
 order by 2,3
 
+--Using CTE to perform calculation on Partition By in previous query 
 With PopulationvsVacinated(continent, lcoation,date,population,new_vaccinations,rolling_vaccination_count)
 as 
 (
